@@ -1,26 +1,62 @@
-# Learn more about charmcraft.yaml configuration at:
-# https://juju.is/docs/sdk/charmcraft-config
-# This is a template `charmcraft.yaml` file for ops charms
-# This file is managed by bootstack-charms-spec and should not be modified
-# within individual charm repos. https://launchpad.net/bootstack-charms-spec
-
+name: reverse-proxy
 type: charm
+title: Reverse Proxy
+summary: Configure reverse proxies using Nginx.
+description: |
+  Configure reverse proxies using Nginx.
 
-bases:
-  - build-on:
-    - name: ubuntu
-      channel: "22.04"
-      architectures: ["amd64"]
-    run-on:
-      - name: ubuntu
-        channel: "22.04"
-        architectures:
-          - amd64
-      - name: ubuntu
-        channel: "20.04"
-        architectures:
-          - amd64
-      - name: ubuntu
-        channel: "18.04"
-        architectures:
-          - amd64
+subordinate: true
+requires:
+  juju-info:
+    interface: juju-info
+    scope: container
+
+platforms:
+  ubuntu@24.04:amd64:
+  #ubuntu@22.04:amd64:
+  #ubuntu@20.04:amd64:
+
+parts:
+  charm:
+    plugin: charm
+    source: .
+    charm-requirements:
+      - requirements.txt
+
+config:
+  options:
+    http-reverse-proxies:
+      description: |
+        DEPRECATED! USE "reverse-proxies" INSTEAD. Will be ignored if "reverse-proxies" is defined.
+        
+        Comma separated list of reverse proxies to setup in the format
+        :<HOST-PORT>:<REMOTE-IP>:<REMOTE-PORT>
+      type: string
+    https-reverse-proxies:
+      description: |
+        DEPRECATED! USE "reverse-proxies" INSTEAD. Will be ignored if "reverse-proxies" is defined.
+        
+        Comma separated list of reverse proxies to setup in the format
+        :<HOST-PORT>:<REMOTE-IP>:<REMOTE-PORT>
+      type: string
+    reverse-proxies:
+      description: |
+        yaml document to define the reverse proxies. It is a list of dictionaries defining the reverse proxies.
+        Each dictionary should have the following keys:
+        - name: arbitrary name of the forward
+        - https: True/False
+        - host-port: local port to listen on
+        - remote-ip: remote IP to proxy to
+        - remote-port: remote port to proxy to
+        Example:
+        - name: cos-traefik
+          https: False
+          host-port: 8080
+          remote-ip: 10.100.0.14
+          remote-port: 80
+        - name: openstack-dashboard
+          https: True
+          host-port: 8443
+          remote-ip: 10.100.0.15
+          remote-port: 443
+      type: string

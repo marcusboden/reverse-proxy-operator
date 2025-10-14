@@ -1,2 +1,4 @@
 ops ~= 2.5
 PyYAML>=6.0
+Jinja2>=3
+pydantic>=2
