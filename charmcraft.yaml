@@ -3,7 +3,9 @@ type: charm
 title: Reverse Proxy
 summary: Configure reverse proxies using Nginx.
 description: |
-  Configure reverse proxies using Nginx.
+  This is a subordinate charm installs and configures nginx on a machine and sets up configurable reverse proxies.
+  
+  It needs minimal [configuration](https://charmhub.io/reverse-proxy/configurations).
 
 subordinate: true
 requires:
@@ -15,6 +17,17 @@ platforms:
   ubuntu@24.04:amd64:
   ubuntu@22.04:amd64:
   ubuntu@20.04:amd64:
+
+links:
+  contact: 
+  - marcus.boden@canonical.com
+  issues:
+  - https://github.com/marcusboden/reverse-proxy-operator/issues
+  source:
+  - https://github.com/marcusboden/reverse-proxy-operator
+  - https://code.launchpad.net/charm-reverse-proxy
+  website:
+  - https://github.com/marcusboden/reverse-proxy-operator
 
 parts:
   charm:
